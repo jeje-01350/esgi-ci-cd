@@ -1,12 +1,12 @@
-name: Test npm lint
+name: Bonjour
 on:
   - push
 jobs:
-  npm_lint:
+  prefab:
     runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/dduportal/esgi-gitpod
+      options: --user=root
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 23
-      - run: npm install && npm run lint
+      - uses: actions/checkout@v4 
+      - run: npm clean-install && npm run lint
