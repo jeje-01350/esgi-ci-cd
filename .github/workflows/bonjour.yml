@@ -11,6 +11,5 @@ jobs:
       - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
-      - run: hadolint Dockerfile
       - run: docker image build --tag="${IMAGE_NAME}" ./
       - run: docker container run --volume="$(pwd)":/app "${IMAGE_NAME}" npm run lint
