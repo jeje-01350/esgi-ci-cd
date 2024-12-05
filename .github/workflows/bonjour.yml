@@ -1,12 +1,13 @@
+# bonjour.yml
 name: Bonjour
 on:
   - push
 jobs:
-  prefab:
+  node_docker:
     runs-on: ubuntu-22.04
-    container:
-      image: ghcr.io/dduportal/esgi-gitpod
-      options: --user=root
+    env:
+      IMAGE_NAME: "node"
     steps:
       - uses: actions/checkout@v4 
-      - run: npm clean-install && npm run lint
+      - run: docker image build --tag="${IMAGE_NAME}" ./
+      - run: docker container run "${IMAGE_NAME}" npm run lint
