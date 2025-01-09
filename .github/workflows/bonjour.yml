@@ -1,4 +1,3 @@
-# bonjour.yml
 name: Bonjour
 on:
   - push
@@ -8,26 +7,26 @@ jobs:
     env:
       IMAGE_NAME: "mynode"
     steps:
-      - uses: actions/checkout@v4 # Récupère le contenu du dépôt correspondant au commit du workflow en cours
+      - uses: actions/checkout@v4
       - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
       - run: docker image build --tag="${IMAGE_NAME}" ./
       - run: docker container run --volume="$(pwd)":/app "${IMAGE_NAME}" npm run lint
   livraison:
-      runs-on: ubuntu-22.04
-      if: startsWith(github.ref, 'refs/tags/')
-      steps:
-        - uses: actions/checkout@v4
-        - name: "Login to Docker Hub"
-          uses: docker/login-action@v3
-          
-          with:
-            username: "jeremy0802"
-            password: "${{ secrets.DOCKERHUB_TOKEN }}"
-        - name: "Push if on `main`"
-          uses: docker/build-push-action@v6
-          with:
-            push: true
-            context: ./
-            tags: "jeremy0802/sayhello:${{ github.ref_name }}"   
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Login to Docker Hub"
+        uses: docker/login-action@v3
+        if: contains('refs/heads/main', github.ref)
+        with:
+          username: "jeremy0802"
+          password: "${{ secrets.DOCKERHUB_TOKEN }}"
+      - name: "Push if on `main`"
+        uses: docker/build-push-action@v6
+        if: contains('refs/heads/main', github.ref)
+        with:
+          push: true
+          context: ./
+          tags: "jeremy0802/sayhello:unstable"
